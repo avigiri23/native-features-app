@@ -1,5 +1,9 @@
+// ignore_for_file: unused_local_variable, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspaths;
 import 'dart:io';
 
 class ImageInput extends StatefulWidget {
@@ -14,10 +18,17 @@ class _ImageInputState extends State<ImageInput> {
     final picker = ImagePicker();
     // ignore: deprecated_member_use
     // ignore: unused_local_variable
-    final imageFile = await picker.getImage(
+    final imageFile = await picker.pickImage(
       source: ImageSource.camera,
       maxWidth: 600,
     );
+    setState(() {
+      _storedImage = File(imageFile.path);
+    });
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final fileName = path.basename(imageFile.path);
+    final savedImage =
+        await File(imageFile.path).copy('${appDir.path}/$fileName');
   }
 
   @override
